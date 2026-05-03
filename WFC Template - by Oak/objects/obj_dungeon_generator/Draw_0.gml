@@ -25,7 +25,7 @@ for (var i = 0; i < global.dungeon_size; ++i) {
 		if ((i == global.dungeon_furthest_x) && (j == global.dungeon_furthest_y)) _c = #9879a8;	
 		
 		
-	    draw_text_color(_margin + (i*_cell_margin), _margin + (j*_cell_margin), global.dungeon_cells[# i, j],_c,_c,_c,_c,1);
+	    draw_text_color(_margin + (i*_cell_margin), _margin + (j*_cell_margin), map_grid[# i, j],_c,_c,_c,_c,1);
 	}
 }
 

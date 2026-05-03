@@ -301,38 +301,46 @@ for (var i = 0; i < global.dungeon_size; ++i) {
 	ela ainda daria uma boa aproximada. Mas aproximações são chatas. Então meu amigo Dumb fez a estrutura dessa lógica de pontos, onde quanto mais distante uma célula é da inicial (a distância é
 	calculada a partir de cada movimento, ou seja, uma célula que me leva 2 movimentos pra se chegar tem 2 pontos), mais pontos ela tem. Aí se houver um empate, é só fazer um sorteio.
 	
-	Ficam aqui os meus agradecimentos ao Dumb
+	Ficam aqui os meus agradecimentos ao Dumb.
+	
+	Edit: Eu acabei reconstruindo o sistema, mas mantendo a mesma lógica do Dumb. Ficou quase a mesma coisa, só deixei um pouco mais fácil de se entender.
 */
+
 map_grid = ds_grid_create(global.dungeon_size, global.dungeon_size);
-ds_grid_clear(map_grid, -4);
-array_points = [];
+ds_grid_clear(map_grid, -1);
+
+point_array = [];
 
 add_point = function(_x, _y, _value){
-  map_grid[# _x, _y] = _value
-  array_push(array_points, {x : _x, y : _y, value : _value});
+	
+	array_push(point_array, [_x, _y, _value])
+	map_grid[# _x, _y] = _value;
 }
 
-add_point(global.dungeon_start_x, global.dungeon_start_y, 1)
+add_point(global.dungeon_start_x, global.dungeon_start_y, 0)
 
-while(array_length(array_points) > 0){
-  var _actual_point = array_points[0];
-  if (global.dungeon_cells[# _actual_point.x, _actual_point.y] == 1){
-	    if (global.dungeon_cells[# _actual_point.x-1, _actual_point.y] == 1  && map_grid[# _actual_point.x-1, _actual_point.y] < 0){
-	      add_point(_actual_point.x - 1, _actual_point.y, _actual_point.value + 1)
-	    }
-		if (global.dungeon_cells[# _actual_point.x+1, _actual_point.y] == 1 && map_grid[# _actual_point.x+1, _actual_point.y] < 0){
-	      add_point(_actual_point.x + 1, _actual_point.y, _actual_point.value + 1)
-	    }
-	    if (global.dungeon_cells[# _actual_point.x, _actual_point.y-1] == 1 && map_grid[# _actual_point.x, _actual_point.y-1] < 0){
-	      add_point(_actual_point.x, _actual_point.y-1, _actual_point.value + 1)
-	    }
-	    if (global.dungeon_cells[# _actual_point.x, _actual_point.y+1] == 1 && map_grid[# _actual_point.x, _actual_point.y+1] < 0){
-	      add_point(_actual_point.x, _actual_point.y+1, _actual_point.value + 1)
-	    }
-  }
+while (array_length(point_array) > 0){
 
-  array_delete(array_points, 0, 1)
+	var _posx = point_array[0][0];
+	var _posy = point_array[0][1];
+	var _value = point_array[0][2];
+	
+	if ((global.dungeon_cells[# _posx+1, _posy]) == 1 && (map_grid[# _posx+1, _posy] == -1)){
+		add_point(_posx+1, _posy, _value+1)	
+	}
+	if ((global.dungeon_cells[# _posx-1, _posy]) == 1 && (map_grid[# _posx-1, _posy] == -1)){
+		add_point(_posx-1, _posy, _value+1)	
+	}
+	if ((global.dungeon_cells[# _posx, _posy+1]) == 1 && (map_grid[# _posx, _posy+1] == -1)){
+		add_point(_posx, _posy+1, _value+1)	
+	}
+	
+	if ((global.dungeon_cells[# _posx, _posy-1]) == 1 && (map_grid[# _posx, _posy-1] == -1)){
+		add_point(_posx, _posy-1, _value+1)	
+	}
+	array_delete(point_array,0,1);
 }
+
 
 var _dist = 0;
 var _xx = 0;
@@ -341,7 +349,7 @@ var _pool = [];
 
 for (var i = 0; i < global.dungeon_size; ++i) {
     for (var j = 0; j < global.dungeon_size; ++j) {
-		if global.dungeon_cells[# _actual_point.x, _actual_point.y] == 1{
+		if global.dungeon_cells[# i, j] == 1{
 			
 			if map_grid[# i, j] == _dist{
 				_dist = map_grid[# i, j];
